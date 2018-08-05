@@ -1,0 +1,21 @@
+{
+	"manifest_version": 2,
+	"name": "zotMyProf",
+	"version": "0.1",
+	"permissions":
+	[
+		"https://www.ratemyprofessors.com/*"
+	],
+	"content_scripts": [
+		{
+			"matches": [
+				"https://www.reg.uci.edu/perl/WebSoc"
+			],
+			"js":  [
+				"jquery-3.3.1.min.js",
+				"content.js"
+				
+			]
+		}
+	]
+}
