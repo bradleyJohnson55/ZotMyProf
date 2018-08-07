@@ -27,6 +27,7 @@ function getScore(last, first, link, row)
 // grab RMP unique link
 function getLink(last, first, row)
 {
+	var found = false;
 	var name = last + ", " + first + ".";
 	var linkID = "";
 	var RMPUrl = "https://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=University+of+California+Irvine&schoolID=1074&query=+" + last;
@@ -35,8 +36,6 @@ function getLink(last, first, row)
 	{
 		var listings = $(response).find(".listings"); // returns the 3 listings for 'armstrong'
 		var children = $(listings).children();
-
-		//var linkID = ""; // to store the unique RMP id for end of url
 
 		var names = $(listings).find(".listing-name"); // returns the 3 sub parts to see if name matches
 		for (var i = 0; i < names.length; ++i)
@@ -47,9 +46,14 @@ function getLink(last, first, row)
 
 			if (first === firstIni)
 			{
+				found = true;
 				linkID = $(children[i]).find("a").attr('href'); // <<<<---- found the muhfuckin ID!
 				getScore(last, first, linkID, row);
 			}
+		}
+		if (!found)
+		{
+			input(last + ', ' + first + '.', '-1', undefined, row);
 		}
 	});
 }
@@ -61,31 +65,44 @@ function main()
 	{
 		var cols = rows[i].getElementsByTagName('td');
 
-		try
+		if (cols.length > 0)
 		{
-			var name = cols[4].innerHTML;
-			names = name.split("<br>");
-
-			for (var j = 0; j < names.length; ++j)
+			try
 			{
-				if (names[j] != "" && names[j] != 'STAFF')
+				var name = cols[4].innerHTML;
+				names = name.split("<br>");
+
+				for (var j = 0; j < names.length; ++j)
 				{
-					var firstLast = names[j].split(", ");
-
-					if (firstLast.length > 1)
+					if (names[j] != "" && names[j] != 'STAFF')
 					{
-						last = firstLast[0];
-						first = firstLast[1];
-					}
+						var firstLast = names[j].split(", ");
 
-					getLink(last, first[0], i);
-					map[name] = [];
-					
-					
+						if (firstLast.length > 1)
+						{
+							last = firstLast[0];
+							first = firstLast[1];
+						}
+
+						getLink(last, first[0], i);
+						//map[name] = [];
+						
+						
+					}
 				}
 			}
+			catch(err){}
 		}
-		catch(err){}
+		else
+		{
+			cols = rows[i].getElementsByTagName('tr');
+			try
+			{
+				var newCell = rows[i].insertCell(cols.length - 1);
+				newCell.innerHTML = '<strong>RMP Score</strong>';
+			}
+			catch(err){}
+		}
 	}
 }
 
@@ -98,19 +115,15 @@ function updateName(name, row)
 	{
 		if (map[name][1] != undefined && map[name][0] != undefined)
 		{
-			var link = '<a href="' + map[name][1] + '" target="_blank">' + name + ' &emsp; ' + map[name][0] + '</a>';
-			//cols[4].innerHTML = link;
-			//console.log('updating HTML now*************************' );
-			//var newCol = rows[row].insertCell(17);
-			cols[4].innerHTML = cols[4].innerHTML.replace(name, link);
-			//newCol.style.width = '250px';
-			//newCol.innerHTML += link;
+			var link = '<a href="' + map[name][1] + '" target="_blank">' + map[name][0] + '</a>';
+			var newCell = rows[row].insertCell(cols.length ).innerHTML = link;
+		}
+		else
+		{
+			var newCell = rows[row].insertCell(cols.length).innerHTML = 'no data';
 		}
 	}
-	catch(err)
-	{
-
-	}
+	catch(err){}
 }
 
 main();

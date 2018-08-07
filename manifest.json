@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
-	"name": "zotMyProf",
-	"version": "0.1",
+	"name": "ZotMyProf",
+	"version": "0.2.1",
 	"permissions":
 	[
 		"https://www.ratemyprofessors.com/*"
@@ -17,5 +17,8 @@
 				
 			]
 		}
-	]
+	],
+	"browser_action": {
+		"default_icon": "125px-UC_Irvine_Anteaters_logo.svg_128x128.png"
+	}
 }
