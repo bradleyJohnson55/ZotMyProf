@@ -34,20 +34,19 @@ function getLink(last, first, row)
 	
 	$.get(RMPUrl, function(response)
 	{
-		var listings = $(response).find(".listings"); // returns the 3 listings for 'armstrong'
+		var listings = $(response).find(".listings"); 
 		var children = $(listings).children();
 
-		var names = $(listings).find(".listing-name"); // returns the 3 sub parts to see if name matches
+		var names = $(listings).find(".listing-name"); 
 		for (var i = 0; i < names.length; ++i)
 		{
-			var nameStr = $(names[i]).find(".main").text(); // whole name
+			var nameStr = $(names[i]).find(".main").text(); 
 			var nameSpl = nameStr.split(", ");
-			var firstIni = nameSpl[1][0]; // first letter of first name
-
+			var firstIni = nameSpl[1][0]; 
 			if (first === firstIni)
 			{
 				found = true;
-				linkID = $(children[i]).find("a").attr('href'); // <<<<---- found the muhfuckin ID!
+				linkID = $(children[i]).find("a").attr('href'); 
 				getScore(last, first, linkID, row);
 			}
 		}
@@ -85,9 +84,6 @@ function main()
 						}
 
 						getLink(last, first[0], i);
-						//map[name] = [];
-						
-						
 					}
 				}
 			}
